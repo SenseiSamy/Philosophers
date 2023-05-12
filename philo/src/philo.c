@@ -6,22 +6,23 @@
 /*   By: snaji <snaji@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/05 16:01:23 by snaji             #+#    #+#             */
-/*   Updated: 2023/05/11 15:51:07 by snaji            ###   ########.fr       */
+/*   Updated: 2023/05/12 02:23:56 by snaji            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-t_philo	*create_philo(int n)
+t_philo	*create_philos(void)
 {
-	t_philo	*philos;
-	int		i;
+	t_philo		*philos;
+	const int	n = get_data()->number_of_philosophers;
+	int			i;
 
 	philos = malloc(n * sizeof (t_philo));
 	if (philos == NULL)
 		return (NULL);
 	i = 0;
-	while (i < n + 1)
+	while (i < n)
 	{
 		philos[i].id = i;
 		if (i == 0)
@@ -32,13 +33,30 @@ t_philo	*create_philo(int n)
 			philos[i].right_fork = 0;
 		else
 			philos[i].right_fork = i + 1;
+		philos[i].state = thinking;
+		++i;
 	}
+	return (philos);
 }
 
-int	main(int ac, char **av)
+int	start_threads(t_philo *philos)
 {
-	t_philo	philo;
+	const int	n = get_data()->number_of_philosophers;
+	int			i;
 
-	if (setup(&philo, ac, av) == EXIT_FAILURE)
-		return (EXIT_FAILURE);
+	i = 0;
+	while (i < n)
+	{
+		if (pthread_create(&philos[i].thread, NULL, &routine, &philos[i]) != 0)
+			return (EXIT_FAILURE);
+		++i;
+	}
+	i = 0;
+	while (i < n)
+	{
+		if (pthread_join(philos[i].thread, NULL) != 0)
+			return (EXIT_FAILURE);
+		++i;
+	}
+	return (EXIT_SUCCESS);
 }

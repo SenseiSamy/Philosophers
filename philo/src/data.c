@@ -6,7 +6,7 @@
 /*   By: snaji <snaji@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/10 19:54:51 by snaji             #+#    #+#             */
-/*   Updated: 2023/05/11 15:54:32 by snaji            ###   ########.fr       */
+/*   Updated: 2023/05/12 02:08:59 by snaji            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,24 @@ t_data	*get_data(void)
 	static t_data	data;
 
 	return (&data);
+}
+
+static t_fork	*create_forks(void)
+{
+	t_fork		*forks;
+	const int	n = get_data()->number_of_philosophers;
+	int			i;
+
+	forks = malloc(n * sizeof (t_fork));
+	i = 0;
+	while (i < n)
+	{
+		forks[i].fork = -1;
+		if (pthread_mutex_init(&forks[i].mutex, NULL) != 0)
+			return (NULL);
+		++i;
+	}
+	return (forks);
 }
 
 int	init_data(int ac, char **av)
@@ -33,8 +51,13 @@ int	init_data(int ac, char **av)
 	data->time_to_eat = ft_atoi(av[3]);
 	data->time_to_sleep = ft_atoi(av[4]);
 	if (ac == 6)
-		data->number_of_times_each_philosopher_must_eat = av[5];
+		data->number_of_times_each_philosopher_must_eat = ft_atoi(av[5]);
 	else
 		data->number_of_times_each_philosopher_must_eat = -1;
+	if (gettimeofday(&data->init_time, NULL) == -1)
+		return (EXIT_FAILURE);
+	data->forks = create_forks();
+	if (data->forks == NULL)
+		return (EXIT_FAILURE);
 	return (EXIT_SUCCESS);
 }

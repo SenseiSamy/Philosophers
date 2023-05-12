@@ -6,9 +6,11 @@
 /*   By: snaji <snaji@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/05 16:15:25 by snaji             #+#    #+#             */
-/*   Updated: 2023/05/05 16:21:42 by snaji            ###   ########.fr       */
+/*   Updated: 2023/05/12 02:17:14 by snaji            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+#include "philo.h"
 
 int	ft_atoi(char *str)
 {
@@ -30,4 +32,24 @@ int	ft_atoi(char *str)
 	while (*str)
 		result = result * 10 + *str++ - '0';
 	return (sign * result);
+}
+
+/* get the time passed since time was set with gettimeofday */
+size_t	time_passed(struct timeval time)
+{
+	size_t			time_ms;
+	struct timeval	current_time;
+
+	if (gettimeofday(&current_time, NULL) == -1)
+		pthread_exit(NULL);
+	time_ms = (current_time.tv_sec * 1000000 + current_time.tv_usec)
+		- (time.tv_sec * 1000000 + time.tv_usec);
+	return (time_ms);
+}
+
+void	fork_change_value(t_fork *fork, int value)
+{
+	pthread_mutex_lock(&fork->mutex);
+	fork->fork = value;
+	pthread_mutex_unlock(&fork->mutex);
 }
