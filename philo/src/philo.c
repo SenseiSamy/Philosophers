@@ -6,7 +6,7 @@
 /*   By: snaji <snaji@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/05 16:01:23 by snaji             #+#    #+#             */
-/*   Updated: 2023/05/12 02:23:56 by snaji            ###   ########.fr       */
+/*   Updated: 2023/05/19 23:56:13 by snaji            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,14 +47,15 @@ int	start_threads(t_philo *philos)
 	i = 0;
 	while (i < n)
 	{
-		if (pthread_create(&philos[i].thread, NULL, &routine, &philos[i]) != 0)
+		if (pthread_create(&philos[i].thread, NULL, &philo_routine, &philos[i]))
 			return (EXIT_FAILURE);
+		usleep(5);
 		++i;
 	}
 	i = 0;
 	while (i < n)
 	{
-		if (pthread_join(philos[i].thread, NULL) != 0)
+		if (pthread_join(philos[i].thread, NULL))
 			return (EXIT_FAILURE);
 		++i;
 	}

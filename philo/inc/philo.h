@@ -6,7 +6,7 @@
 /*   By: snaji <snaji@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/05 15:40:12 by snaji             #+#    #+#             */
-/*   Updated: 2023/05/12 02:05:56 by snaji            ###   ########.fr       */
+/*   Updated: 2023/05/19 23:41:08 by snaji            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ t_data	*get_data(void);
 int		init_data(int ac, char **av);
 t_philo	*create_philos(void);
 int		start_threads(t_philo *philos);
-void	*routine(void *data);
+void	*philo_routine(void *ptr);
 void	fork_change_value(t_fork *fork, int value);
 int		ft_atoi(char *str);
 size_t	time_passed(struct timeval time);

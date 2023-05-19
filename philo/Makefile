@@ -23,7 +23,7 @@ clean:
 	rm -rf $(OBJ_DIR)
 
 fclean: clean
-	rm -f PROG_NAME
+	rm -f $(NAME)
 
 re: fclean
 	make all
