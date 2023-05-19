@@ -1,25 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   mutex.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: snaji <snaji@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/05/11 22:42:38 by snaji             #+#    #+#             */
-/*   Updated: 2023/05/20 01:09:20 by snaji            ###   ########.fr       */
+/*   Created: 2023/05/20 00:20:49 by snaji             #+#    #+#             */
+/*   Updated: 2023/05/20 01:36:35 by snaji            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int	main(int ac, char **av)
+int	mutex_fork_equal(t_fork *fork, int value)
 {
-	t_philo	*philos;
+	int	result;
 
-	if (init_data(ac, av) == EXIT_FAILURE)
-		return (EXIT_FAILURE);
-	philos = create_philos();
-	start_threads(philos);
-	print_forks();
-	return (EXIT_SUCCESS);
+	pthread_mutex_lock(&fork->mutex);
+	result = fork->fork == value;
+	pthread_mutex_unlock(&fork->mutex);
+	return (result);
+}
+
+void	mutex_fork_assign(t_fork *fork, int value)
+{
+	pthread_mutex_lock(&fork->mutex);
+	fork->fork = value;
+	pthread_mutex_unlock(&fork->mutex);
 }

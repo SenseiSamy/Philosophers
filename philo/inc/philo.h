@@ -6,7 +6,7 @@
 /*   By: snaji <snaji@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/05 15:40:12 by snaji             #+#    #+#             */
-/*   Updated: 2023/05/19 23:41:08 by snaji            ###   ########.fr       */
+/*   Updated: 2023/05/20 01:43:14 by snaji            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,7 @@ struct s_data
 	int				number_of_times_each_philosopher_must_eat;
 	struct timeval	init_time;
 	t_fork			*forks;
+	pthread_mutex_t	printf;
 };
 
 /******************************************************************************/
@@ -72,8 +73,11 @@ int		init_data(int ac, char **av);
 t_philo	*create_philos(void);
 int		start_threads(t_philo *philos);
 void	*philo_routine(void *ptr);
-void	fork_change_value(t_fork *fork, int value);
+int		mutex_fork_equal(t_fork *fork, int value);
+void	mutex_fork_assign(t_fork *fork, int value);
 int		ft_atoi(char *str);
 size_t	time_passed(struct timeval time);
+
+void	print_forks(void);
 
 #endif

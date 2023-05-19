@@ -6,7 +6,7 @@
 /*   By: snaji <snaji@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/10 19:54:51 by snaji             #+#    #+#             */
-/*   Updated: 2023/05/19 23:32:55 by snaji            ###   ########.fr       */
+/*   Updated: 2023/05/20 00:51:08 by snaji            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,8 @@ int	init_data(int ac, char **av)
 	else
 		data->number_of_times_each_philosopher_must_eat = -1;
 	if (gettimeofday(&data->init_time, NULL) == -1)
+		return (EXIT_FAILURE);
+	if (pthread_mutex_init(&data->printf, NULL) != 0)
 		return (EXIT_FAILURE);
 	data->forks = create_forks();
 	if (data->forks == NULL)

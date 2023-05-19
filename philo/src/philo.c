@@ -6,7 +6,7 @@
 /*   By: snaji <snaji@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/05 16:01:23 by snaji             #+#    #+#             */
-/*   Updated: 2023/05/19 23:56:13 by snaji            ###   ########.fr       */
+/*   Updated: 2023/05/20 01:22:05 by snaji            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,14 +25,11 @@ t_philo	*create_philos(void)
 	while (i < n)
 	{
 		philos[i].id = i;
+		philos[i].left_fork = i;
 		if (i == 0)
-			philos[i].left_fork = n - 1;
+			philos[i].right_fork = n - 1;
 		else
-			philos[i].left_fork = i;
-		if (i == n - 1)
-			philos[i].right_fork = 0;
-		else
-			philos[i].right_fork = i + 1;
+			philos[i].right_fork = i - 1;
 		philos[i].state = thinking;
 		++i;
 	}

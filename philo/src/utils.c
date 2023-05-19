@@ -6,7 +6,7 @@
 /*   By: snaji <snaji@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/05 16:15:25 by snaji             #+#    #+#             */
-/*   Updated: 2023/05/12 02:17:14 by snaji            ###   ########.fr       */
+/*   Updated: 2023/05/20 01:52:05 by snaji            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,11 +45,4 @@ size_t	time_passed(struct timeval time)
 	time_ms = (current_time.tv_sec * 1000000 + current_time.tv_usec)
 		- (time.tv_sec * 1000000 + time.tv_usec);
 	return (time_ms);
-}
-
-void	fork_change_value(t_fork *fork, int value)
-{
-	pthread_mutex_lock(&fork->mutex);
-	fork->fork = value;
-	pthread_mutex_unlock(&fork->mutex);
 }
