@@ -6,7 +6,7 @@
 /*   By: snaji <snaji@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/10 19:54:51 by snaji             #+#    #+#             */
-/*   Updated: 2023/05/20 00:51:08 by snaji            ###   ########.fr       */
+/*   Updated: 2023/05/22 20:27:50 by snaji            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,8 +58,10 @@ int	init_data(int ac, char **av)
 		return (EXIT_FAILURE);
 	if (pthread_mutex_init(&data->printf, NULL) != 0)
 		return (EXIT_FAILURE);
+	if (pthread_mutex_init(&data->simulation_ended_mutex, NULL) != 0)
+		return (EXIT_FAILURE);
 	data->forks = create_forks();
 	if (data->forks == NULL)
 		return (EXIT_FAILURE);
-	return (EXIT_SUCCESS);
+	return (data->simulation_ended = 0, EXIT_SUCCESS);
 }

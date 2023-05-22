@@ -6,7 +6,7 @@
 /*   By: snaji <snaji@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/11 22:42:38 by snaji             #+#    #+#             */
-/*   Updated: 2023/05/20 01:09:20 by snaji            ###   ########.fr       */
+/*   Updated: 2023/05/22 19:26:16 by snaji            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,5 @@ int	main(int ac, char **av)
 		return (EXIT_FAILURE);
 	philos = create_philos();
 	start_threads(philos);
-	print_forks();
 	return (EXIT_SUCCESS);
 }

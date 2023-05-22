@@ -6,7 +6,7 @@
 /*   By: snaji <snaji@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/05 15:40:12 by snaji             #+#    #+#             */
-/*   Updated: 2023/05/20 01:43:14 by snaji            ###   ########.fr       */
+/*   Updated: 2023/05/22 20:20:14 by snaji            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,8 @@ struct s_data
 	struct timeval	init_time;
 	t_fork			*forks;
 	pthread_mutex_t	printf;
+	pthread_mutex_t	simulation_ended_mutex;
+	int				simulation_ended;
 };
 
 /******************************************************************************/
@@ -77,7 +79,5 @@ int		mutex_fork_equal(t_fork *fork, int value);
 void	mutex_fork_assign(t_fork *fork, int value);
 int		ft_atoi(char *str);
 size_t	time_passed(struct timeval time);
-
-void	print_forks(void);
 
 #endif
