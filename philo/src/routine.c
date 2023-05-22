@@ -6,7 +6,7 @@
 /*   By: snaji <snaji@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/11 23:05:14 by snaji             #+#    #+#             */
-/*   Updated: 2023/05/22 22:06:11 by snaji            ###   ########.fr       */
+/*   Updated: 2023/05/22 22:32:04 by snaji            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,25 +14,21 @@
 
 static void	think(t_philo *philo, t_data *data)
 {
-	if (mutex_fork_equal(&data->forks[philo->left_fork], -1))
+	if (mutex_fork_equal(&data->forks[philo->left_fork], -1)
+		&& mutex_fork_equal(&data->forks[philo->right_fork], -1))
 	{
 		mutex_fork_assign(&data->forks[philo->left_fork], philo->id);
 		pthread_mutex_lock(&data->printf);
-		printf("%ld %d has taken a fork %d\n", time_passed(data->init_time) / 1000,
-			philo->id + 1, philo->left_fork + 1);
+		printf("%ld %d has taken a fork\n", time_passed(data->init_time) / 1000,
+			philo->id + 1);
 		pthread_mutex_unlock(&data->printf);
-	}
-	else if (mutex_fork_equal(&data->forks[philo->right_fork], -1))
-	{
 		mutex_fork_assign(&data->forks[philo->right_fork], philo->id);
 		pthread_mutex_lock(&data->printf);
-		printf("%ld %d has taken a fork %d\n", time_passed(data->init_time) / 1000,
-			philo->id + 1, philo->right_fork + 1);
+		printf("%ld %d has taken a fork\n", time_passed(data->init_time) / 1000,
+			philo->id + 1);
 		pthread_mutex_unlock(&data->printf);
-	}
-	else if (mutex_fork_equal(&data->forks[philo->left_fork], philo->id)
-		&& mutex_fork_equal(&data->forks[philo->right_fork], philo->id))
 		philo->state = eating;
+	}
 }
 
 static void	eat(t_philo *philo, t_data *data, struct timeval *eat_time,
