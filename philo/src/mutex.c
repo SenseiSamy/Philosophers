@@ -6,18 +6,21 @@
 /*   By: snaji <snaji@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/20 00:20:49 by snaji             #+#    #+#             */
-/*   Updated: 2023/05/20 01:36:35 by snaji            ###   ########.fr       */
+/*   Updated: 2023/05/28 19:46:49 by snaji            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int	mutex_fork_equal(t_fork *fork, int value)
+bool	mutex_fork_equal(t_fork *fork, int value)
 {
-	int	result;
+	bool	result;
 
 	pthread_mutex_lock(&fork->mutex);
-	result = fork->fork == value;
+	if (fork->fork == value)
+		result = true;
+	else
+		result = false;
 	pthread_mutex_unlock(&fork->mutex);
 	return (result);
 }

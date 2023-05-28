@@ -6,16 +6,16 @@
 /*   By: snaji <snaji@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/05 16:01:23 by snaji             #+#    #+#             */
-/*   Updated: 2023/05/22 21:54:14 by snaji            ###   ########.fr       */
+/*   Updated: 2023/05/28 19:35:04 by snaji            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-t_philo	*create_philos(void)
+t_philo	*create_philos(t_data *data)
 {
 	t_philo		*philos;
-	const int	n = get_data()->number_of_philosophers;
+	const int	n = data->number_of_philosophers;
 	int			i;
 
 	philos = malloc(n * sizeof (t_philo));
@@ -31,14 +31,15 @@ t_philo	*create_philos(void)
 		else
 			philos[i].right_fork = i - 1;
 		philos[i].state = thinking;
+		philos[i].data = data;
 		++i;
 	}
 	return (philos);
 }
 
-int	start_threads(t_philo *philos)
+int	start_threads(t_data *data, t_philo *philos)
 {
-	const int	n = get_data()->number_of_philosophers;
+	const int	n = data->number_of_philosophers;
 	int			i;
 
 	i = 0;

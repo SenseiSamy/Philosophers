@@ -6,7 +6,7 @@
 /*   By: snaji <snaji@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/05 15:40:12 by snaji             #+#    #+#             */
-/*   Updated: 2023/05/22 20:20:14 by snaji            ###   ########.fr       */
+/*   Updated: 2023/05/28 19:47:18 by snaji            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 # include <stdlib.h>
 # include <pthread.h>
 # include <sys/time.h>
+# include <stdbool.h>
 
 /******************************************************************************/
 /*                             STRUCT AND TYPEDEF                             */
@@ -46,11 +47,14 @@ struct s_fork
 
 struct s_philo
 {
-	int			id;
-	int			left_fork;
-	int			right_fork;
-	t_state		state;
-	pthread_t	thread;
+	int				id;
+	int				left_fork;
+	int				right_fork;
+	int				nb_eat;
+	struct timeval	eat_time;
+	t_state			state;
+	pthread_t		thread;
+	t_data			*data;
 };
 
 struct s_data
@@ -70,14 +74,15 @@ struct s_data
 /******************************************************************************/
 /*                            FUNCTION DECLARATION                            */
 
-t_data	*get_data(void);
-int		init_data(int ac, char **av);
-t_philo	*create_philos(void);
-int		start_threads(t_philo *philos);
+int		init_data(int ac, char **av, t_data *data);
+t_philo	*create_philos(t_data *data);
+int		start_threads(t_data *data, t_philo *philos);
 void	*philo_routine(void *ptr);
-int		mutex_fork_equal(t_fork *fork, int value);
+bool	mutex_fork_equal(t_fork *fork, int value);
 void	mutex_fork_assign(t_fork *fork, int value);
 int		ft_atoi(char *str);
 size_t	time_passed(struct timeval time);
+bool	sim_end(t_philo	*philo, t_data *data);
+void	free_all(t_data *data, t_philo *philos);
 
 #endif

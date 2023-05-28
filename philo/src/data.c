@@ -6,23 +6,16 @@
 /*   By: snaji <snaji@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/10 19:54:51 by snaji             #+#    #+#             */
-/*   Updated: 2023/05/22 20:27:50 by snaji            ###   ########.fr       */
+/*   Updated: 2023/05/28 18:56:23 by snaji            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-t_data	*get_data(void)
-{
-	static t_data	data;
-
-	return (&data);
-}
-
-static t_fork	*create_forks(void)
+static t_fork	*create_forks(t_data *data)
 {
 	t_fork		*forks;
-	const int	n = get_data()->number_of_philosophers;
+	const int	n = data->number_of_philosophers;
 	int			i;
 
 	forks = malloc(n * sizeof (t_fork));
@@ -37,11 +30,8 @@ static t_fork	*create_forks(void)
 	return (forks);
 }
 
-int	init_data(int ac, char **av)
+int	init_data(int ac, char **av, t_data *data)
 {
-	t_data	*data;
-
-	data = get_data();
 	if (ac < 5)
 		return (write(2, "philo: not enough argument", 26), EXIT_FAILURE);
 	else if (ac > 6)
@@ -60,8 +50,20 @@ int	init_data(int ac, char **av)
 		return (EXIT_FAILURE);
 	if (pthread_mutex_init(&data->simulation_ended_mutex, NULL) != 0)
 		return (EXIT_FAILURE);
-	data->forks = create_forks();
+	data->forks = create_forks(data);
 	if (data->forks == NULL)
 		return (EXIT_FAILURE);
 	return (data->simulation_ended = 0, EXIT_SUCCESS);
+}
+
+void	free_all(t_data *data, t_philo *philos)
+{
+	int	i;
+
+	i = 0;
+	while (i < data->number_of_philosophers)
+		pthread_mutex_destroy(&data->forks[i++].mutex);
+	pthread_mutex_destroy(&data->printf);
+	free(data->forks);
+	free(philos);
 }

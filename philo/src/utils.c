@@ -6,7 +6,7 @@
 /*   By: snaji <snaji@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/05 16:15:25 by snaji             #+#    #+#             */
-/*   Updated: 2023/05/20 01:52:05 by snaji            ###   ########.fr       */
+/*   Updated: 2023/05/28 18:56:21 by snaji            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,4 +45,27 @@ size_t	time_passed(struct timeval time)
 	time_ms = (current_time.tv_sec * 1000000 + current_time.tv_usec)
 		- (time.tv_sec * 1000000 + time.tv_usec);
 	return (time_ms);
+}
+
+bool	sim_end(t_philo	*philo, t_data *data)
+{
+	bool	end;
+
+	end = false;
+	pthread_mutex_lock(&data->simulation_ended_mutex);
+	if (data->simulation_ended == 1)
+		end = true;
+	else if (time_passed(philo->eat_time) >= (size_t)(data->time_to_die * 1000))
+	{
+		data->simulation_ended = 1;
+		end = true;
+		pthread_mutex_lock(&data->printf);
+		printf("%ld %d died\n", time_passed(data->init_time) / 1000,
+			philo->id + 1);
+		pthread_mutex_unlock(&data->printf);
+	}
+	if (end == true)
+		philo->state = dead;
+	pthread_mutex_unlock(&data->simulation_ended_mutex);
+	return (end);
 }

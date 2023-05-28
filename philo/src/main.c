@@ -6,7 +6,7 @@
 /*   By: snaji <snaji@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/11 22:42:38 by snaji             #+#    #+#             */
-/*   Updated: 2023/05/22 19:26:16 by snaji            ###   ########.fr       */
+/*   Updated: 2023/05/28 18:56:13 by snaji            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,13 @@
 
 int	main(int ac, char **av)
 {
+	t_data	data;
 	t_philo	*philos;
 
-	if (init_data(ac, av) == EXIT_FAILURE)
+	if (init_data(ac, av, &data) == EXIT_FAILURE)
 		return (EXIT_FAILURE);
-	philos = create_philos();
-	start_threads(philos);
+	philos = create_philos(&data);
+	start_threads(&data, philos);
+	free_all(&data, philos);
 	return (EXIT_SUCCESS);
 }
