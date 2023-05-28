@@ -6,7 +6,7 @@
 /*   By: snaji <snaji@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/05 15:40:12 by snaji             #+#    #+#             */
-/*   Updated: 2023/05/28 19:47:18 by snaji            ###   ########.fr       */
+/*   Updated: 2023/05/28 20:31:09 by snaji            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,7 @@ struct s_data
 	int				time_to_eat;
 	int				time_to_sleep;
 	int				number_of_times_each_philosopher_must_eat;
+	int				think_time;
 	struct timeval	init_time;
 	t_fork			*forks;
 	pthread_mutex_t	printf;

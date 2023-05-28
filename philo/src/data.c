@@ -6,7 +6,7 @@
 /*   By: snaji <snaji@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/10 19:54:51 by snaji             #+#    #+#             */
-/*   Updated: 2023/05/28 18:56:23 by snaji            ###   ########.fr       */
+/*   Updated: 2023/05/28 20:44:07 by snaji            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,8 @@ int	init_data(int ac, char **av, t_data *data)
 		data->number_of_times_each_philosopher_must_eat = ft_atoi(av[5]);
 	else
 		data->number_of_times_each_philosopher_must_eat = -1;
+	data->think_time = (data->time_to_die - (data->time_to_eat
+		+ data->time_to_sleep)) / 2;
 	if (gettimeofday(&data->init_time, NULL) == -1)
 		return (EXIT_FAILURE);
 	if (pthread_mutex_init(&data->printf, NULL) != 0)

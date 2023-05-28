@@ -6,7 +6,7 @@
 /*   By: snaji <snaji@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/11 23:05:14 by snaji             #+#    #+#             */
-/*   Updated: 2023/05/28 19:50:58 by snaji            ###   ########.fr       */
+/*   Updated: 2023/05/28 20:41:35 by snaji            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,6 +93,8 @@ static void	sleeep(t_philo *philo, t_data *data)
 	printf("%ld %d is thinking\n", time_passed(data->init_time) / 1000,
 		philo->id + 1);
 	pthread_mutex_unlock(&data->printf);
+	if (data->think_time > 0)
+		usleep(data->think_time * 1000);
 }
 
 void	*philo_routine(void *ptr)
