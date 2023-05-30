@@ -6,7 +6,7 @@
 /*   By: snaji <snaji@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/11 23:05:14 by snaji             #+#    #+#             */
-/*   Updated: 2023/05/28 20:41:35 by snaji            ###   ########.fr       */
+/*   Updated: 2023/05/30 20:05:40 by snaji            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,30 +36,6 @@ static void	think(t_philo *philo, t_data *data)
 	}
 }
 
-// static void	think(t_philo *philo, t_data *data)
-// {
-// 	if (sim_end(philo, data) == true)
-// 		return ;
-// 	if (mutex_fork_equal(&data->forks[philo->left_fork], -1) == true
-// 		&& mutex_fork_equal(&data->forks[philo->right_fork], -1) == true
-// 		&& philo->right_fork != philo->left_fork)
-// 	{
-// 		pthread_mutex_lock(&data->forks[philo->left_fork].mutex);
-// 		pthread_mutex_lock(&data->forks[philo->right_fork].mutex);
-// 		data->forks[philo->left_fork].fork = philo->id;
-// 		data->forks[philo->right_fork].fork = philo->id;
-// 		pthread_mutex_unlock(&data->forks[philo->left_fork].mutex);
-// 		pthread_mutex_unlock(&data->forks[philo->right_fork].mutex);
-// 		pthread_mutex_lock(&data->printf);
-// 		printf("%ld %d has taken a fork %d\n", time_passed(data->init_time) / 1000,
-// 			philo->id + 1, philo->left_fork + 1);
-// 		printf("%ld %d has taken a fork %d\n", time_passed(data->init_time) / 1000,
-// 			philo->id + 1, philo->right_fork + 1);
-// 		pthread_mutex_unlock(&data->printf);
-// 		philo->state = eating;
-// 	}
-// }
-
 static void	eat(t_philo *philo, t_data *data)
 {
 	if (sim_end(philo, data) == true)
@@ -71,7 +47,10 @@ static void	eat(t_philo *philo, t_data *data)
 	philo->nb_eat += 1;
 	if (gettimeofday(&philo->eat_time, NULL) == -1)
 		pthread_exit(NULL);
-	usleep(data->time_to_eat * 1000);
+	if (data->time_to_eat > data->time_to_die)
+		usleep(data->time_to_die * 1000);
+	else
+		usleep(data->time_to_eat * 1000);
 	mutex_fork_assign(&data->forks[philo->left_fork], -1);
 	mutex_fork_assign(&data->forks[philo->right_fork], -1);
 	philo->state = sleeping;
@@ -85,7 +64,11 @@ static void	sleeep(t_philo *philo, t_data *data)
 	printf("%ld %d is sleeping\n", time_passed(data->init_time) / 1000,
 		philo->id + 1);
 	pthread_mutex_unlock(&data->printf);
-	usleep(data->time_to_sleep * 1000);
+	if (time_passed(philo->eat_time) + (size_t)(data->time_to_sleep * 1000)
+		> (size_t)(data->time_to_die * 1000))
+		usleep(data->time_to_die * 1000 - time_passed(philo->eat_time));
+	else
+		usleep(data->time_to_sleep * 1000);
 	if (sim_end(philo, data) == true)
 		return ;
 	philo->state = thinking;

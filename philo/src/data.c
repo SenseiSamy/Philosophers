@@ -6,7 +6,7 @@
 /*   By: snaji <snaji@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/10 19:54:51 by snaji             #+#    #+#             */
-/*   Updated: 2023/05/28 20:44:07 by snaji            ###   ########.fr       */
+/*   Updated: 2023/05/29 19:27:30 by snaji            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,20 +30,29 @@ static t_fork	*create_forks(t_data *data)
 	return (forks);
 }
 
+static int	check_values(t_data *data)
+{
+	if (data->number_of_philosophers <= 0 || data->time_to_die < 0
+		|| data->time_to_eat < 0 || data->time_to_sleep < 0)
+		return (EXIT_FAILURE);
+	return (EXIT_SUCCESS);
+}
+
 int	init_data(int ac, char **av, t_data *data)
 {
 	if (ac < 5)
-		return (write(2, "philo: not enough argument", 26), EXIT_FAILURE);
+		return (write(2, "philo: not enough argument\n", 27), EXIT_FAILURE);
 	else if (ac > 6)
-		return (write(2, "philo: too many arguments", 25), EXIT_FAILURE);
+		return (write(2, "philo: too many arguments\n", 26), EXIT_FAILURE);
 	data->number_of_philosophers = ft_atoi(av[1]);
 	data->time_to_die = ft_atoi(av[2]);
 	data->time_to_eat = ft_atoi(av[3]);
 	data->time_to_sleep = ft_atoi(av[4]);
+	if (check_values(data) == EXIT_FAILURE)
+		return (write(2, "philo: invalid argument\n", 24), EXIT_FAILURE);
+	data->number_of_times_each_philosopher_must_eat = -1;
 	if (ac == 6)
 		data->number_of_times_each_philosopher_must_eat = ft_atoi(av[5]);
-	else
-		data->number_of_times_each_philosopher_must_eat = -1;
 	data->think_time = (data->time_to_die - (data->time_to_eat
 		+ data->time_to_sleep)) / 2;
 	if (gettimeofday(&data->init_time, NULL) == -1)
