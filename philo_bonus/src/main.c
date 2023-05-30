@@ -14,5 +14,9 @@
 
 int	main(int ac, char **av)
 {
+	t_data	data;
+
+	if (init_data(ac, av, &data) == EXIT_FAILURE)
+		return (EXIT_FAILURE);
 	
 }
