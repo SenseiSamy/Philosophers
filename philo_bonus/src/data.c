@@ -6,7 +6,7 @@
 /*   By: snaji <snaji@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/28 21:29:56 by snaji             #+#    #+#             */
-/*   Updated: 2023/05/29 20:07:34 by snaji            ###   ########.fr       */
+/*   Updated: 2023/05/31 20:51:28 by snaji            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 static t_philo	*create_philos(int n)
 {
 	t_philo	*philos;
-	int		i;
 
 	philos = malloc(n * sizeof (t_philo));
 	if (philos == NULL)
@@ -51,12 +50,12 @@ int	init_data(int ac, char **av, t_data *data)
 		+ data->time_to_sleep)) / 2;
 	if (gettimeofday(&data->init_time, NULL) == -1)
 		return (EXIT_FAILURE);
-	if (pthread_mutex_init(&data->printf, NULL) != 0
-		|| pthread_mutex_init(&data->simulation_ended_mutex, NULL) != 0)
-		return (EXIT_FAILURE);
-	sem_init(&data->semaphore, 1, 0);
 	data->philos = create_philos(data->number_of_philosophers);
-	if (data->philos == NULL)
+	sem_unlink("/forks");
+	sem_unlink("/printf");
+	data->forks = sem_open("/forks", O_CREAT | O_EXCL, 0644, ft_atoi(av[1]));
+	data->printf = sem_open("/printf", O_CREAT | O_EXCL, 0644, 1);
+	if (data->philos == NULL || data->forks == SEM_FAILED || data->printf == SEM_FAILED)
 		return (EXIT_FAILURE);
 	return (data->simulation_ended = 0, EXIT_SUCCESS);
 }

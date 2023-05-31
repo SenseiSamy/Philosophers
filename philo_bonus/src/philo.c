@@ -6,7 +6,7 @@
 /*   By: snaji <snaji@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/28 21:40:59 by snaji             #+#    #+#             */
-/*   Updated: 2023/05/29 19:33:56 by snaji            ###   ########.fr       */
+/*   Updated: 2023/05/31 21:08:28 by snaji            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,31 +14,70 @@
 
 static void	think(t_philo *self, t_data *data)
 {
-
+	sem_wait(data->forks);
+	sem_wait(data->printf);
+	printf("%ld %d has taken a fork\n", time_passed(data->init_time) / 1000,
+		self->id + 1);
+	sem_post(data->printf);
+	sem_wait(data->forks);
+	sem_wait(data->printf);
+	printf("%ld %d has taken a fork\n", time_passed(data->init_time) / 1000,
+		self->id + 1);
+	sem_post(data->printf);
+	self->state = eating;
+	printf("%ld %d is eating\n", time_passed(data->init_time) / 1000,
+		self->id + 1);
 }
 
 static void	eat(t_philo *self, t_data *data)
 {
-	
+	if (gettimeofday(&self->eat_time, NULL) == -1)
+		exit(EXIT_FAILURE);
+	++self->nb_eat;
+	usleep(data->time_to_eat * 1000);
+	check_death(self, data);
+	sem_post(data->forks);
+	sem_post(data->forks);
+	self->state = sleeping;
 }
 
 static void	sleeep(t_philo *self, t_data *data)
 {
-	
+	sem_wait(data->printf);
+	printf("%ld %d is sleeping\n", time_passed(data->init_time) / 1000,
+		self->id + 1);
+	sem_post(data->printf);
+	usleep(data->time_to_sleep * 1000);
+	check_death(self, data);
+	self->state = thinking;
+	usleep(data->think_time);
 }
 
-int	philo_loop(t_data *data, int id)
+static int	philo_loop(t_data *data, int id)
 {
 	t_philo	*self;
 
 	self = &data->philos[id];
+	self->id = id;
+	self->state = thinking;
+	self->data = data;
+	pthread_create(&self->thread, NULL, &thread_check_death, self);
+	pthread_detach(self->thread);
 	if (gettimeofday(&self->eat_time, NULL) == -1)
 		return (EXIT_FAILURE);
 	self->nb_eat = 0;
-	while (self->state != dead)
+	while (!(self->nb_eat >= data->number_of_times_each_philosopher_must_eat
+		&& data->number_of_times_each_philosopher_must_eat >= 0))
 	{
-
+		if (self->state == thinking)
+			think(self, data);
+		else if (self->state == eating)
+			eat(self, data);
+		else if (self->state == sleeping)
+			sleeep(self, data);
 	}
+	free_all(data);
+	exit(EXIT_SUCCESS);
 }
 
 int	start_processes(t_data *data)
@@ -55,4 +94,9 @@ int	start_processes(t_data *data)
 			philo_loop(data, i);
 		++i;
 	}
+	waitpid(-1, NULL, 0);
+	i = 0;
+	while (i < data->number_of_philosophers)
+		kill(data->philos[i++].pid, SIGKILL);
+	return (EXIT_SUCCESS);
 }

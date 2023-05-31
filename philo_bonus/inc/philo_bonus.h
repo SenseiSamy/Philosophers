@@ -6,7 +6,7 @@
 /*   By: snaji <snaji@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/28 21:03:30 by snaji             #+#    #+#             */
-/*   Updated: 2023/05/28 21:49:28 by snaji            ###   ########.fr       */
+/*   Updated: 2023/05/31 20:47:51 by snaji            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,9 @@
 # include <sys/time.h>
 # include <semaphore.h>
 # include <unistd.h>
+# include <fcntl.h>
+# include <sys/wait.h>
+# include <signal.h>
 
 /******************************************************************************/
 /*                             STRUCT AND TYPEDEF                             */
@@ -40,10 +43,13 @@ enum e_state
 
 struct s_philo
 {
+	int				id;
 	pid_t			pid;
 	int				nb_eat;
 	struct timeval	eat_time;
 	t_state			state;
+	pthread_t		thread;
+	t_data			*data;
 };
 
 struct s_data
@@ -55,9 +61,8 @@ struct s_data
 	int				number_of_times_each_philosopher_must_eat;
 	int				think_time;
 	struct timeval	init_time;
-	sem_t			semaphore;
-	pthread_mutex_t	printf;
-	pthread_mutex_t	simulation_ended_mutex;
+	sem_t			*forks;
+	sem_t			*printf;
 	int				simulation_ended;
 	t_philo			*philos;
 };
@@ -65,6 +70,12 @@ struct s_data
 /******************************************************************************/
 /*                            FUNCTION DECLARATION                            */
 
-int	init_data(int ac, char **av, t_data *data);
+int		init_data(int ac, char **av, t_data *data);
+size_t	time_passed(struct timeval time);
+void	check_death(t_philo *self, t_data *data);
+void	free_all(t_data *data);
+int		ft_atoi(char *str);
+int		start_processes(t_data *data);
+void	*thread_check_death(void *ptr);
 
 #endif
