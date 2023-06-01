@@ -6,7 +6,7 @@
 /*   By: snaji <snaji@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/31 17:26:03 by snaji             #+#    #+#             */
-/*   Updated: 2023/05/31 21:03:01 by snaji            ###   ########.fr       */
+/*   Updated: 2023/06/01 18:01:52 by snaji            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,6 @@ void	check_death(t_philo *self, t_data *data)
 		sem_wait(data->printf);
 		printf("%ld %d died\n", time_passed(data->init_time) / 1000,
 			self->id + 1);
-		sem_post(data->printf);
 		free_all(data);
 		exit(EXIT_SUCCESS);
 	}

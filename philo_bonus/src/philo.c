@@ -6,7 +6,7 @@
 /*   By: snaji <snaji@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/28 21:40:59 by snaji             #+#    #+#             */
-/*   Updated: 2023/05/31 21:08:28 by snaji            ###   ########.fr       */
+/*   Updated: 2023/06/01 17:43:55 by snaji            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,12 @@ static void	sleeep(t_philo *self, t_data *data)
 	usleep(data->time_to_sleep * 1000);
 	check_death(self, data);
 	self->state = thinking;
-	usleep(data->think_time);
+	sem_wait(data->printf);
+	printf("%ld %d is thinking\n", time_passed(data->init_time) / 1000,
+		self->id + 1);
+	sem_post(data->printf);
+	if (data->think_time > 0)
+		usleep(data->think_time * 1000);
 }
 
 static int	philo_loop(t_data *data, int id)
@@ -66,6 +71,8 @@ static int	philo_loop(t_data *data, int id)
 	if (gettimeofday(&self->eat_time, NULL) == -1)
 		return (EXIT_FAILURE);
 	self->nb_eat = 0;
+	if (id % 2 == 0 && data->think_time > 0)
+		usleep(data->think_time * 1000);
 	while (!(self->nb_eat >= data->number_of_times_each_philosopher_must_eat
 		&& data->number_of_times_each_philosopher_must_eat >= 0))
 	{
