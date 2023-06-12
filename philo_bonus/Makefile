@@ -2,7 +2,7 @@ CC = cc
 CFLAGS = -Wall -Wextra -Werror -g3
 
 SRC_DIR = src/
-SRC = $(addprefix $(SRC_DIR), main.c data.c philo.c utils.c)
+SRC = $(addprefix $(SRC_DIR), main.c data.c philo.c utils.c thread.c)
 OBJ_DIR = obj/
 OBJ = $(patsubst $(SRC_DIR)%.c, $(OBJ_DIR)%.o, $(SRC))
 INCLUDE_DIR = inc/
