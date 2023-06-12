@@ -6,7 +6,7 @@
 /*   By: snaji <snaji@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/31 17:26:03 by snaji             #+#    #+#             */
-/*   Updated: 2023/06/01 18:01:52 by snaji            ###   ########.fr       */
+/*   Updated: 2023/06/12 17:51:50 by snaji            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ size_t	time_passed(struct timeval time)
 
 void	check_death(t_philo *self, t_data *data)
 {
-	if (time_passed(self->eat_time) >= (size_t)(data->time_to_die * 1000))
+	if (time_passed(self->eat_time) > (size_t)(data->time_to_die * 1000 + 10))
 	{
 		sem_wait(data->printf);
 		printf("%ld %d died\n", time_passed(data->init_time) / 1000,
@@ -50,7 +50,10 @@ void	*thread_check_death(void *ptr)
 
 	self = (t_philo *)ptr;
 	while (1)
+	{
 		check_death(self, self->data);
+		usleep(500);
+	}
 }
 
 int	ft_atoi(char *str)

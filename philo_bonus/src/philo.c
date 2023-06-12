@@ -6,7 +6,7 @@
 /*   By: snaji <snaji@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/28 21:40:59 by snaji             #+#    #+#             */
-/*   Updated: 2023/06/01 17:43:55 by snaji            ###   ########.fr       */
+/*   Updated: 2023/06/12 17:42:52 by snaji            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,6 @@ static void	eat(t_philo *self, t_data *data)
 		exit(EXIT_FAILURE);
 	++self->nb_eat;
 	usleep(data->time_to_eat * 1000);
-	check_death(self, data);
 	sem_post(data->forks);
 	sem_post(data->forks);
 	self->state = sleeping;
