@@ -6,7 +6,7 @@
 /*   By: snaji <snaji@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/12 19:30:21 by snaji             #+#    #+#             */
-/*   Updated: 2023/06/12 19:52:39 by snaji            ###   ########.fr       */
+/*   Updated: 2023/06/13 16:46:38 by snaji            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ void	*thread_check_death(void *ptr)
 	t_philo	*self;
 
 	self = (t_philo *)ptr;
+	pthread_detach(self->thread);
 	while (1)
 	{
 		if (time_passed(self->eat_time) > (size_t)(self->data->time_to_die

@@ -6,7 +6,7 @@
 /*   By: snaji <snaji@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/28 21:40:59 by snaji             #+#    #+#             */
-/*   Updated: 2023/06/12 19:51:55 by snaji            ###   ########.fr       */
+/*   Updated: 2023/06/13 16:38:06 by snaji            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,11 +68,10 @@ static int	philo_loop(t_data *data, int id)
 	if (gettimeofday(&self->eat_time, NULL) == -1)
 		return (EXIT_FAILURE);
 	pthread_create(&self->thread, NULL, &thread_check_death, self);
-	pthread_detach(self->thread);
 	if (id % 2 == 0 && data->think_time > 0)
 		usleep(data->think_time * 1000);
 	while (!(self->nb_eat >= data->number_of_times_each_philosopher_must_eat
-		&& data->number_of_times_each_philosopher_must_eat >= 0))
+			&& data->number_of_times_each_philosopher_must_eat >= 0))
 	{
 		if (self->state == thinking)
 			think(self, data);
