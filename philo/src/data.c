@@ -6,7 +6,7 @@
 /*   By: snaji <snaji@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/10 19:54:51 by snaji             #+#    #+#             */
-/*   Updated: 2023/05/29 19:27:30 by snaji            ###   ########.fr       */
+/*   Updated: 2023/06/13 17:23:43 by snaji            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,16 +54,16 @@ int	init_data(int ac, char **av, t_data *data)
 	if (ac == 6)
 		data->number_of_times_each_philosopher_must_eat = ft_atoi(av[5]);
 	data->think_time = (data->time_to_die - (data->time_to_eat
-		+ data->time_to_sleep)) / 2;
+				+ data->time_to_sleep)) / 2;
 	if (gettimeofday(&data->init_time, NULL) == -1)
-		return (EXIT_FAILURE);
+		return (write(2, "philo: initialization failed\n", 29), EXIT_FAILURE);
 	if (pthread_mutex_init(&data->printf, NULL) != 0)
-		return (EXIT_FAILURE);
+		return (write(2, "philo: initialization failed\n", 29), EXIT_FAILURE);
 	if (pthread_mutex_init(&data->simulation_ended_mutex, NULL) != 0)
-		return (EXIT_FAILURE);
+		return (write(2, "philo: initialization failed\n", 29), EXIT_FAILURE);
 	data->forks = create_forks(data);
 	if (data->forks == NULL)
-		return (EXIT_FAILURE);
+		return (write(2, "philo: initialization failed\n", 29), EXIT_FAILURE);
 	return (data->simulation_ended = 0, EXIT_SUCCESS);
 }
 
