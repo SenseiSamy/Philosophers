@@ -6,7 +6,7 @@
 /*   By: snaji <snaji@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/28 21:03:30 by snaji             #+#    #+#             */
-/*   Updated: 2023/06/12 19:38:01 by snaji            ###   ########.fr       */
+/*   Updated: 2023/06/21 18:46:29 by snaji            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,9 @@ struct s_data
 	sem_t			*forks;
 	sem_t			*printf;
 	sem_t			*simulation_ended;
+	sem_t			*nb_finish_eat;
 	pthread_t		thread;
+	pthread_t		thread2;
 	t_philo			*philos;
 };
 
@@ -78,5 +80,6 @@ int		ft_atoi(char *str);
 int		start_processes(t_data *data);
 void	*thread_check_death(void *ptr);
 void	*thread_main(void *ptr);
+void	*thread_main2(void *ptr);
 
 #endif

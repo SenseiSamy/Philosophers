@@ -6,7 +6,7 @@
 /*   By: snaji <snaji@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/28 21:40:59 by snaji             #+#    #+#             */
-/*   Updated: 2023/06/13 16:38:06 by snaji            ###   ########.fr       */
+/*   Updated: 2023/06/21 21:08:00 by snaji            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,9 @@ static void	eat(t_philo *self, t_data *data)
 	if (gettimeofday(&self->eat_time, NULL) == -1)
 		exit(EXIT_FAILURE);
 	++self->nb_eat;
+	if (self->nb_eat == data->number_of_times_each_philosopher_must_eat
+		&& data->number_of_times_each_philosopher_must_eat >= 0)
+		sem_post(data->nb_finish_eat);
 	usleep(data->time_to_eat * 1000);
 	sem_post(data->forks);
 	sem_post(data->forks);
@@ -70,8 +73,7 @@ static int	philo_loop(t_data *data, int id)
 	pthread_create(&self->thread, NULL, &thread_check_death, self);
 	if (id % 2 == 0 && data->think_time > 0)
 		usleep(data->think_time * 1000);
-	while (!(self->nb_eat >= data->number_of_times_each_philosopher_must_eat
-			&& data->number_of_times_each_philosopher_must_eat >= 0))
+	while (1)
 	{
 		if (self->state == thinking)
 			think(self, data);
@@ -80,9 +82,6 @@ static int	philo_loop(t_data *data, int id)
 		else if (self->state == sleeping)
 			sleeep(self, data);
 	}
-	sem_post(data->simulation_ended);
-	free_all(data);
-	exit(EXIT_SUCCESS);
 }
 
 int	start_processes(t_data *data)
@@ -100,6 +99,11 @@ int	start_processes(t_data *data)
 		++i;
 	}
 	pthread_create(&data->thread, NULL, &thread_main, data);
+	pthread_create(&data->thread2, NULL, &thread_main2, data);
 	pthread_join(data->thread, NULL);
+	i = 0;
+	while (i++ < data->number_of_philosophers)
+		sem_post(data->nb_finish_eat);
+	pthread_join(data->thread2, NULL);
 	return (EXIT_SUCCESS);
 }

@@ -6,7 +6,7 @@
 /*   By: snaji <snaji@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/31 17:26:03 by snaji             #+#    #+#             */
-/*   Updated: 2023/06/12 19:37:57 by snaji            ###   ########.fr       */
+/*   Updated: 2023/06/21 21:05:13 by snaji            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ void	free_all(t_data *data)
 	sem_close(data->forks);
 	sem_close(data->printf);
 	sem_close(data->simulation_ended);
+	sem_close(data->nb_finish_eat);
 }
 
 /* get the time passed since time was set with gettimeofday */

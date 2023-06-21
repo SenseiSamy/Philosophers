@@ -6,7 +6,7 @@
 /*   By: snaji <snaji@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/12 19:30:21 by snaji             #+#    #+#             */
-/*   Updated: 2023/06/13 16:46:38 by snaji            ###   ########.fr       */
+/*   Updated: 2023/06/21 21:07:19 by snaji            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,7 @@ void	*thread_check_death(void *ptr)
 	t_philo	*self;
 
 	self = (t_philo *)ptr;
-	pthread_detach(self->thread);
-	while (1)
+	while (self->state != dead)
 	{
 		if (time_passed(self->eat_time) > (size_t)(self->data->time_to_die
 			* 1000))
@@ -31,6 +30,7 @@ void	*thread_check_death(void *ptr)
 		}
 		usleep(500);
 	}
+	pthread_exit(EXIT_SUCCESS);
 }
 
 void	*thread_main(void *ptr)
@@ -43,5 +43,23 @@ void	*thread_main(void *ptr)
 	i = 0;
 	while (i < data->number_of_philosophers)
 		kill(data->philos[i++].pid, SIGKILL);
+	pthread_exit(EXIT_SUCCESS);
+}
+
+void	*thread_main2(void *ptr)
+{
+	t_data	*data;
+	int		n;
+
+	data = (t_data *)ptr;
+	n = 0;
+	while (1)
+	{
+		sem_wait(data->nb_finish_eat);
+		++n;
+		if (n == data->number_of_philosophers)
+			break;
+	}
+	sem_post(data->simulation_ended);
 	pthread_exit(EXIT_SUCCESS);
 }
