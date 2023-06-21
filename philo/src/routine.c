@@ -6,7 +6,7 @@
 /*   By: snaji <snaji@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/11 23:05:14 by snaji             #+#    #+#             */
-/*   Updated: 2023/06/13 17:41:33 by snaji            ###   ########.fr       */
+/*   Updated: 2023/06/21 15:02:07 by snaji            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,6 +90,9 @@ void	*philo_routine(void *ptr)
 	philo->nb_eat = 0;
 	if (gettimeofday(&philo->eat_time, NULL) == -1)
 		pthread_exit(NULL);
+	if (data->number_of_philosophers > 1 && philo->id % 2 == 0
+		&& data->think_time > 0)
+		usleep(data->think_time * 1000);
 	while (philo->state != dead)
 	{
 		if (philo->nb_eat >= data->number_of_times_each_philosopher_must_eat
