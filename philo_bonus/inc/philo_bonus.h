@@ -6,7 +6,7 @@
 /*   By: snaji <snaji@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/28 21:03:30 by snaji             #+#    #+#             */
-/*   Updated: 2023/06/21 18:46:29 by snaji            ###   ########.fr       */
+/*   Updated: 2023/06/22 16:25:58 by snaji            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,7 @@ struct s_data
 	sem_t			*printf;
 	sem_t			*simulation_ended;
 	sem_t			*nb_finish_eat;
+	sem_t			*eat_time;
 	pthread_t		thread;
 	pthread_t		thread2;
 	t_philo			*philos;
@@ -77,6 +78,7 @@ int		init_data(int ac, char **av, t_data *data);
 size_t	time_passed(struct timeval time);
 void	free_all(t_data *data);
 int		ft_atoi(char *str);
+void	kill_all_processes(t_data *data);
 int		start_processes(t_data *data);
 void	*thread_check_death(void *ptr);
 void	*thread_main(void *ptr);

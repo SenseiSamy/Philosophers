@@ -6,7 +6,7 @@
 /*   By: snaji <snaji@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/28 21:40:59 by snaji             #+#    #+#             */
-/*   Updated: 2023/06/21 21:08:00 by snaji            ###   ########.fr       */
+/*   Updated: 2023/06/22 16:44:11 by snaji            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,10 @@ static void	think(t_philo *self, t_data *data)
 
 static void	eat(t_philo *self, t_data *data)
 {
+	sem_wait(data->eat_time);
 	if (gettimeofday(&self->eat_time, NULL) == -1)
 		exit(EXIT_FAILURE);
+	sem_post(data->eat_time);
 	++self->nb_eat;
 	if (self->nb_eat == data->number_of_times_each_philosopher_must_eat
 		&& data->number_of_times_each_philosopher_must_eat >= 0)
@@ -69,10 +71,11 @@ static int	philo_loop(t_data *data, int id)
 	self->data = data;
 	self->nb_eat = 0;
 	if (gettimeofday(&self->eat_time, NULL) == -1)
-		return (EXIT_FAILURE);
-	pthread_create(&self->thread, NULL, &thread_check_death, self);
-	if (id % 2 == 0 && data->think_time > 0)
-		usleep(data->think_time * 1000);
+		exit(EXIT_FAILURE);
+	if (pthread_create(&self->thread, NULL, &thread_check_death, self) != 0)
+		exit(EXIT_FAILURE);
+	if (data->number_of_philosophers > 1 && self->id % 2 == 0)
+		usleep(data->time_to_eat * 1000);
 	while (1)
 	{
 		if (self->state == thinking)
@@ -98,12 +101,15 @@ int	start_processes(t_data *data)
 			philo_loop(data, i);
 		++i;
 	}
-	pthread_create(&data->thread, NULL, &thread_main, data);
-	pthread_create(&data->thread2, NULL, &thread_main2, data);
-	pthread_join(data->thread, NULL);
+	if (pthread_create(&data->thread, NULL, &thread_main, data) != 0
+		|| pthread_create(&data->thread2, NULL, &thread_main2, data) != 0)
+		return (kill_all_processes(data), EXIT_FAILURE);
+	if (pthread_join(data->thread, NULL) != 0)
+		return (kill_all_processes(data), EXIT_FAILURE);
 	i = 0;
 	while (i++ < data->number_of_philosophers)
 		sem_post(data->nb_finish_eat);
-	pthread_join(data->thread2, NULL);
+	if (pthread_join(data->thread2, NULL) != 0)
+		return (EXIT_FAILURE);
 	return (EXIT_SUCCESS);
 }

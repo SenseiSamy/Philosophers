@@ -6,7 +6,7 @@
 /*   By: snaji <snaji@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/28 21:29:56 by snaji             #+#    #+#             */
-/*   Updated: 2023/06/21 21:08:50 by snaji            ###   ########.fr       */
+/*   Updated: 2023/06/22 16:02:31 by snaji            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,14 +52,16 @@ static int	init_sem(t_data *data)
 	sem_unlink("/printf");
 	sem_unlink("/sim_ended");
 	sem_unlink("/nb_finish_eat");
+	sem_unlink("/eat_time");
 	data->forks = sem_open("/forks", O_CREAT | O_EXCL, 0644,
 			data->number_of_philosophers);
 	data->printf = sem_open("/printf", O_CREAT | O_EXCL, 0644, 1);
 	data->simulation_ended = sem_open("/sim_ended", O_CREAT | O_EXCL, 0644, 0);
 	data->nb_finish_eat = sem_open("/nb_finish_eat", O_CREAT | O_EXCL, 0644, 0);
+	data->eat_time = sem_open("/eat_time", O_CREAT | O_EXCL, 0644, 1);
 	if (data->forks == SEM_FAILED || data->printf == SEM_FAILED
 		|| data->simulation_ended == SEM_FAILED || data->nb_finish_eat
-		== SEM_FAILED)
+		== SEM_FAILED || data->eat_time == SEM_FAILED)
 		return (EXIT_FAILURE);
 	return (EXIT_SUCCESS);
 }

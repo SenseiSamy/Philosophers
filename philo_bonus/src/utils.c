@@ -6,7 +6,7 @@
 /*   By: snaji <snaji@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/31 17:26:03 by snaji             #+#    #+#             */
-/*   Updated: 2023/06/21 21:05:13 by snaji            ###   ########.fr       */
+/*   Updated: 2023/06/22 16:25:46 by snaji            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,21 @@ void	free_all(t_data *data)
 	sem_close(data->printf);
 	sem_close(data->simulation_ended);
 	sem_close(data->nb_finish_eat);
+	sem_close(data->eat_time);
+	sem_unlink("/forks");
+	sem_unlink("/printf");
+	sem_unlink("/sim_ended");
+	sem_unlink("/nb_finish_eat");
+	sem_unlink("/eat_time");
+}
+
+void	kill_all_processes(t_data *data)
+{
+	int	i;
+
+	i = 0;
+	while (i < data->number_of_philosophers)
+		kill(data->philos[i++].pid, SIGKILL);
 }
 
 /* get the time passed since time was set with gettimeofday */
