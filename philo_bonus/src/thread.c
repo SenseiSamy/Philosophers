@@ -6,7 +6,7 @@
 /*   By: snaji <snaji@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/12 19:30:21 by snaji             #+#    #+#             */
-/*   Updated: 2023/06/22 16:36:35 by snaji            ###   ########.fr       */
+/*   Updated: 2023/06/23 19:01:22 by snaji            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,16 +35,6 @@ void	*thread_check_death(void *ptr)
 }
 
 void	*thread_main(void *ptr)
-{
-	t_data	*data;
-
-	data = (t_data *)ptr;
-	sem_wait(data->simulation_ended);
-	kill_all_processes(data);
-	pthread_exit(EXIT_SUCCESS);
-}
-
-void	*thread_main2(void *ptr)
 {
 	t_data	*data;
 	int		n;

@@ -6,7 +6,7 @@
 /*   By: snaji <snaji@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/28 21:40:59 by snaji             #+#    #+#             */
-/*   Updated: 2023/06/22 16:44:11 by snaji            ###   ########.fr       */
+/*   Updated: 2023/06/23 19:01:32 by snaji            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,15 +97,14 @@ int	start_processes(t_data *data)
 		data->philos[i].pid = fork();
 		if (data->philos[i].pid == -1)
 			return (EXIT_FAILURE);
-		else if (data->philos[i].pid == 0)
+		if (data->philos[i].pid == 0)
 			philo_loop(data, i);
 		++i;
 	}
-	if (pthread_create(&data->thread, NULL, &thread_main, data) != 0
-		|| pthread_create(&data->thread2, NULL, &thread_main2, data) != 0)
+	if (pthread_create(&data->thread2, NULL, &thread_main, data) != 0)
 		return (kill_all_processes(data), EXIT_FAILURE);
-	if (pthread_join(data->thread, NULL) != 0)
-		return (kill_all_processes(data), EXIT_FAILURE);
+	sem_wait(data->simulation_ended);
+	kill_all_processes(data);
 	i = 0;
 	while (i++ < data->number_of_philosophers)
 		sem_post(data->nb_finish_eat);
