@@ -6,7 +6,7 @@
 /*   By: snaji <snaji@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/11 23:05:14 by snaji             #+#    #+#             */
-/*   Updated: 2023/06/21 15:02:07 by snaji            ###   ########.fr       */
+/*   Updated: 2023/06/23 19:54:08 by snaji            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,17 +36,17 @@ static void	think(t_philo *philo, t_data *data)
 	}
 }
 
-static void	eat(t_philo *philo, t_data *data)
+static int	eat(t_philo *philo, t_data *data)
 {
 	if (sim_end(philo, data) == true)
-		return ;
+		return (EXIT_SUCCESS);
 	pthread_mutex_lock(&data->printf);
 	printf("%ld %d is eating\n", time_passed(data->init_time) / 1000,
 		philo->id + 1);
 	pthread_mutex_unlock(&data->printf);
 	philo->nb_eat += 1;
 	if (gettimeofday(&philo->eat_time, NULL) == -1)
-		pthread_exit(NULL);
+		return (EXIT_FAILURE);
 	if (data->time_to_eat > data->time_to_die)
 		usleep(data->time_to_die * 1000);
 	else
@@ -54,6 +54,7 @@ static void	eat(t_philo *philo, t_data *data)
 	mutex_fork_assign(&data->forks[philo->left_fork], -1);
 	mutex_fork_assign(&data->forks[philo->right_fork], -1);
 	philo->state = sleeping;
+	return (EXIT_SUCCESS);
 }
 
 static void	sleeep(t_philo *philo, t_data *data)
@@ -76,8 +77,7 @@ static void	sleeep(t_philo *philo, t_data *data)
 	printf("%ld %d is thinking\n", time_passed(data->init_time) / 1000,
 		philo->id + 1);
 	pthread_mutex_unlock(&data->printf);
-	if (data->think_time > 0)
-		usleep(data->think_time * 1000);
+	usleep(data->think_time);
 }
 
 void	*philo_routine(void *ptr)
@@ -89,21 +89,22 @@ void	*philo_routine(void *ptr)
 	data = philo->data;
 	philo->nb_eat = 0;
 	if (gettimeofday(&philo->eat_time, NULL) == -1)
-		pthread_exit(NULL);
-	if (data->number_of_philosophers > 1 && philo->id % 2 == 0
-		&& data->think_time > 0)
-		usleep(data->think_time * 1000);
-	while (philo->state != dead)
+		return (NULL);
+	if (data->number_of_philosophers > 1 && philo->id % 2 == 0)
+		usleep(data->time_to_eat * 1000);
+	while (philo->state != dead && !(philo->nb_eat
+			>= data->number_of_times_each_philosopher_must_eat
+			&& data->number_of_times_each_philosopher_must_eat >= 0))
 	{
-		if (philo->nb_eat >= data->number_of_times_each_philosopher_must_eat
-			&& data->number_of_times_each_philosopher_must_eat >= 0)
-			break ;
 		if (philo->state == thinking)
 			think(philo, data);
 		else if (philo->state == eating)
-			eat(philo, data);
+		{
+			if (eat(philo, data) == EXIT_FAILURE)
+				return (NULL);
+		}
 		else if (philo->state == sleeping)
 			sleeep(philo, data);
 	}
-	pthread_exit(NULL);
+	return (NULL);
 }

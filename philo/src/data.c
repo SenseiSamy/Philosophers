@@ -6,7 +6,7 @@
 /*   By: snaji <snaji@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/10 19:54:51 by snaji             #+#    #+#             */
-/*   Updated: 2023/06/21 16:05:02 by snaji            ###   ########.fr       */
+/*   Updated: 2023/06/23 19:35:32 by snaji            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ int	init_data(int ac, char **av, t_data *data)
 		data->number_of_times_each_philosopher_must_eat = get_value(av[5]);
 	if (check_values(data, ac) == EXIT_FAILURE)
 		return (write(2, "philo: invalid argument\n", 24), EXIT_FAILURE);
-	data->think_time = 1;
+	data->think_time = 1000;
 	if (gettimeofday(&data->init_time, NULL) == -1)
 		return (write(2, "philo: initialization failed\n", 29), EXIT_FAILURE);
 	if (pthread_mutex_init(&data->printf, NULL) != 0)
