@@ -6,7 +6,7 @@
 /*   By: snaji <snaji@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/05 15:40:12 by snaji             #+#    #+#             */
-/*   Updated: 2023/05/28 20:31:09 by snaji            ###   ########.fr       */
+/*   Updated: 2023/06/23 20:18:19 by snaji            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,7 @@ void	*philo_routine(void *ptr);
 bool	mutex_fork_equal(t_fork *fork, int value);
 void	mutex_fork_assign(t_fork *fork, int value);
 int		ft_atoi(char *str);
+size_t	ft_min(size_t a, size_t b);
 size_t	time_passed(struct timeval time);
 bool	sim_end(t_philo	*philo, t_data *data);
 void	free_all(t_data *data, t_philo *philos);

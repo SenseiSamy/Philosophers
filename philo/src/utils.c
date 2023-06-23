@@ -6,7 +6,7 @@
 /*   By: snaji <snaji@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/05 16:15:25 by snaji             #+#    #+#             */
-/*   Updated: 2023/06/23 19:38:29 by snaji            ###   ########.fr       */
+/*   Updated: 2023/06/23 20:23:39 by snaji            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,4 +68,11 @@ bool	sim_end(t_philo	*philo, t_data *data)
 		philo->state = dead;
 	pthread_mutex_unlock(&data->simulation_ended_mutex);
 	return (end);
+}
+
+size_t	ft_min(size_t a, size_t b)
+{
+	if (a < b)
+		return (a);
+	return (b);
 }

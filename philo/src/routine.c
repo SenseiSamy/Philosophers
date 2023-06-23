@@ -6,7 +6,7 @@
 /*   By: snaji <snaji@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/11 23:05:14 by snaji             #+#    #+#             */
-/*   Updated: 2023/06/23 19:54:08 by snaji            ###   ########.fr       */
+/*   Updated: 2023/06/23 20:23:27 by snaji            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,10 @@ static void	think(t_philo *philo, t_data *data)
 		&& philo->right_fork != philo->left_fork)
 	{
 		pthread_mutex_lock(&data->forks[philo->left_fork].mutex);
-		pthread_mutex_lock(&data->forks[philo->right_fork].mutex);
 		data->forks[philo->left_fork].fork = philo->id;
-		data->forks[philo->right_fork].fork = philo->id;
 		pthread_mutex_unlock(&data->forks[philo->left_fork].mutex);
+		pthread_mutex_lock(&data->forks[philo->right_fork].mutex);
+		data->forks[philo->right_fork].fork = philo->id;
 		pthread_mutex_unlock(&data->forks[philo->right_fork].mutex);
 		pthread_mutex_lock(&data->printf);
 		printf("%ld %d has taken a fork\n", time_passed(data->init_time) / 1000,
@@ -47,10 +47,7 @@ static int	eat(t_philo *philo, t_data *data)
 	philo->nb_eat += 1;
 	if (gettimeofday(&philo->eat_time, NULL) == -1)
 		return (EXIT_FAILURE);
-	if (data->time_to_eat > data->time_to_die)
-		usleep(data->time_to_die * 1000);
-	else
-		usleep(data->time_to_eat * 1000);
+	usleep(ft_min(data->time_to_eat, data->time_to_die) * 1000);
 	mutex_fork_assign(&data->forks[philo->left_fork], -1);
 	mutex_fork_assign(&data->forks[philo->right_fork], -1);
 	philo->state = sleeping;
@@ -91,7 +88,7 @@ void	*philo_routine(void *ptr)
 	if (gettimeofday(&philo->eat_time, NULL) == -1)
 		return (NULL);
 	if (data->number_of_philosophers > 1 && philo->id % 2 == 0)
-		usleep(data->time_to_eat * 1000);
+		usleep(ft_min(data->time_to_eat, data->time_to_die) * 1000);
 	while (philo->state != dead && !(philo->nb_eat
 			>= data->number_of_times_each_philosopher_must_eat
 			&& data->number_of_times_each_philosopher_must_eat >= 0))

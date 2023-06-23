@@ -6,7 +6,7 @@
 /*   By: snaji <snaji@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/31 17:26:03 by snaji             #+#    #+#             */
-/*   Updated: 2023/06/22 16:25:46 by snaji            ###   ########.fr       */
+/*   Updated: 2023/06/23 20:20:47 by snaji            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,4 +69,11 @@ int	ft_atoi(char *str)
 	while (*str)
 		result = result * 10 + *str++ - '0';
 	return (sign * result);
+}
+
+size_t	ft_min(size_t a, size_t b)
+{
+	if (a < b)
+		return (a);
+	return (b);
 }

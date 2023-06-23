@@ -6,7 +6,7 @@
 /*   By: snaji <snaji@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/28 21:40:59 by snaji             #+#    #+#             */
-/*   Updated: 2023/06/23 19:01:32 by snaji            ###   ########.fr       */
+/*   Updated: 2023/06/23 20:22:11 by snaji            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ static int	philo_loop(t_data *data, int id)
 	if (pthread_create(&self->thread, NULL, &thread_check_death, self) != 0)
 		exit(EXIT_FAILURE);
 	if (data->number_of_philosophers > 1 && self->id % 2 == 0)
-		usleep(data->time_to_eat * 1000);
+		usleep(ft_min(data->time_to_eat, data->time_to_die) * 1000);
 	while (1)
 	{
 		if (self->state == thinking)
